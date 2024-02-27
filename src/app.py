@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
 from decouple import config
+from utils.db import db
 
 app = Flask(__name__)
 CORS(app)
@@ -15,6 +16,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
 app.config["JWT_SECRET_KEY"] = config('JWT_SECRET_KEY')
 
 jwt = JWTManager(app)
+db.init_app(app)
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
