@@ -5,6 +5,7 @@ from datetime import timedelta
 from decouple import config
 from utils.db import db
 from routes.roles import roles
+from routes.usuarios import usuarios
 
 app = Flask(__name__)
 CORS(app)
@@ -20,6 +21,7 @@ jwt = JWTManager(app)
 db.init_app(app)
 
 app.register_blueprint(roles)
+app.register_blueprint(usuarios)
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
