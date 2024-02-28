@@ -8,6 +8,7 @@ from routes.roles import roles
 from routes.usuarios import usuarios
 from routes.tipo_adjuntos import tipo_adjuntos
 from routes.estados_servicio import estados_servicio
+from routes.tipo_asignacion import tipo_asignacion
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +27,7 @@ app.register_blueprint(roles)
 app.register_blueprint(usuarios)
 app.register_blueprint(tipo_adjuntos)
 app.register_blueprint(estados_servicio)
+app.register_blueprint(tipo_asignacion)
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
