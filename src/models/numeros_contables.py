@@ -1,7 +1,8 @@
 from utils.db import db
+from models.tipo_asignaciones import Tipo_asignaciones
 
 class Numeros_contables(db.Model):
-    __tablename__ = 'archivos_adjuntos'
+    __tablename__ = 'numeros_contables'
     id_numero_contable = db.Column(db.BINARY(16), primary_key=True)
     servicio_id = db.Column(db.BINARY(16), db.ForeignKey('servicios.id_servicio'), nullable=True)
     sub_servicio_id = db.Column(db.BINARY(16), db.ForeignKey('sub_servicios.id_sub_servicio'), nullable=True)

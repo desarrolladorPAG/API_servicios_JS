@@ -1,4 +1,5 @@
 from utils.db import db
+from models.estados_de_servicio import Estados_de_servicio
 
 class Cierres_tecnicos(db.Model):
     __tablename__ = 'cierres_tecnicos'

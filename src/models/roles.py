@@ -1,4 +1,5 @@
 from utils.db import db
+from models.usuarios import Usuarios
 
 class Roles(db.Model):
     __tablename__ = 'roles'

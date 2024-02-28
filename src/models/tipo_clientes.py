@@ -1,4 +1,5 @@
 from utils.db import db
+from models.tipo_intervenciones import Tipo_intervenciones
 
 class Tipo_clientes(db.Model):
     __tablename__ = 'tipo_clientes'

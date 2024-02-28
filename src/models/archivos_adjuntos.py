@@ -1,5 +1,5 @@
 from utils.db import db
-
+from models.tipo_adjuntos import Tipo_adjuntos
 class Archivos_adjuntos(db.Model):
     __tablename__ = 'archivos_adjuntos'
     id_archivo_adjunto = db.Column(db.BINARY(16), primary_key=True)

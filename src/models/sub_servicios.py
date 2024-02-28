@@ -1,4 +1,8 @@
 from utils.db import db
+from models.archivos_adjuntos import Archivos_adjuntos
+from models.numeros_contables import Numeros_contables
+from models.cierres_tecnicos import Cierres_tecnicos
+from models.tipo_clientes import Tipo_clientes
 
 class Sub_servicios(db.Model):
     __tablename__ = 'sub_servicios'

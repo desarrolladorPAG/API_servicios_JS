@@ -1,5 +1,6 @@
 from utils.db import db
-
+from models.sub_servicios import Sub_servicios
+from models.clientes_generales import Clientes_generales
 class Servicios(db.Model):
     __tablename__ = 'servicios'
     id_servicio = db.Column(db.BINARY(16), primary_key=True)
