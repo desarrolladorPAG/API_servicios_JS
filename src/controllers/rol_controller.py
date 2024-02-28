@@ -16,5 +16,22 @@ def crear_rol():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+    
+def obtener_roles():
+    try:
+        lista = []
+        roles = db.session.query(Roles).all()
+
+        if not roles:
+            return jsonify({"message" : "No se ecnotraron roles registrados", "status" : 404}) , 404
+        else:
+            for rol in roles:
+                datos = {"id_rol" : binascii.hexlify(rol.id_rol).decode(), "nombre_rol" : rol.nombre_rol}
+                lista.append(datos)
+
+            return jsonify(lista)
+        
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
 
 
