@@ -10,7 +10,7 @@ class Sub_servicios(db.Model):
     servicio_id = db.Column(db.BINARY(16), db.ForeignKey('servicios.id_servicio'), nullable=False)
     tipo_cliente_id = db.Column(db.BINARY(16), db.ForeignKey('tipo_clientes.id_tipo_cliente'), nullable=False)
     tipo_intervencion_id = db.Column(db.BINARY(16), db.ForeignKey('tipo_intervenciones.id_tipo_intervencion'), nullable=False)
-    usuario_id = db.Column(db.BINARY(16), db.ForeignKey('usuarios.id_usuario'), nullable=False)
+    tecnico_usuario_id = db.Column(db.BINARY(16), db.ForeignKey('usuarios.id_usuario'), nullable=False)
     numero_sub_servicio = db.Column(db.String(30),nullable = False)
     fecha_solicitud = db.Column(db.Date,nullable = False)
     nombre_solicitante = db.Column(db.String(45),nullable = False)
@@ -26,12 +26,12 @@ class Sub_servicios(db.Model):
     usuario = db.relationship('Usuarios', back_populates="sub_servicios", uselist=False, single_parent=True)
     tipo_intervencion = db.relationship('Tipo_intervenciones', back_populates="sub_servicios", uselist=False, single_parent=True)
 
-    def __init__(self, id_sub_servicio, servicio_id, tipo_cliente_id, tipo_intervencion_id, usuario_id, numero_sub_servicio, fecha_solicitud, nombre_solicitante, descripcion) :
+    def __init__(self, id_sub_servicio, servicio_id, tipo_cliente_id, tipo_intervencion_id, tecnico_usuario_id, numero_sub_servicio, fecha_solicitud, nombre_solicitante, descripcion) :
         self.id_sub_servicio = id_sub_servicio
         self.servicio_id = servicio_id
         self.tipo_cliente_id = tipo_cliente_id
         self.tipo_intervencion_id = tipo_intervencion_id
-        self.usuario_id = usuario_id
+        self.tecnico_usuario_id = tecnico_usuario_id
         self.numero_sub_servicio = numero_sub_servicio
         self.fecha_solicitud = fecha_solicitud
         self.nombre_solicitante = nombre_solicitante
