@@ -11,6 +11,9 @@ class Usuarios(db.Model):
 
     servicios = db.relationship("Servicios", back_populates="usuario",cascade="all")
     sub_servicios = db.relationship("Sub_servicios", back_populates="usuario",cascade="all")
+    archivos_adjuntos = db.relationship("Archivos_adjuntos", back_populates="usuario",cascade="all")
+    cierres_tecnicos = db.relationship("Cierres_tecnicos", back_populates="usuario",cascade="all")
+    numeros_contables = db.relationship("Numeros_contables", back_populates="usuario",cascade="all")
 
     #Relaciones de clave foraneas
     rol = db.relationship('Roles', back_populates="usuarios", uselist=False, single_parent=True)
