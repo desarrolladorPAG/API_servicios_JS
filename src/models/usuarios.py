@@ -1,5 +1,6 @@
 from utils.db import db
 from models.servicios import Servicios
+from werkzeug.security import check_password_hash
 
 class Usuarios(db.Model):
     __tablename__ = 'usuarios'
@@ -22,4 +23,7 @@ class Usuarios(db.Model):
         self.password = password
         self.nombre_completo = nombre_completo
         self.rol_id = rol_id
+    
+    def verificar_password(self,password):
+        return check_password_hash(self.password,password)
         

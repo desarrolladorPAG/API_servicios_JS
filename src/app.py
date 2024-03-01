@@ -11,6 +11,7 @@ from routes.estados_servicio import estados_servicio
 from routes.tipo_asignacion import tipo_asignacion
 from routes.tipo_cliente import tipo_cliente
 from routes.tipo_intervenciones import tipo_intervencion
+from routes.login import login
 
 app = Flask(__name__)
 CORS(app)
@@ -32,5 +33,7 @@ app.register_blueprint(estados_servicio)
 app.register_blueprint(tipo_asignacion)
 app.register_blueprint(tipo_cliente)
 app.register_blueprint(tipo_intervencion)
+app.register_blueprint(login)
+
 if __name__=="__main__":
     app.run(port=5000, debug=True)
