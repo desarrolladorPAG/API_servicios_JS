@@ -24,7 +24,8 @@ class Servicios(db.Model):
     #Relaciones de clave foraneas
     tipo_cliente = db.relationship('Tipo_clientes', back_populates="servicios", uselist=False, single_parent=True)
     cliente_general = db.relationship('Clientes_generales', back_populates="servicios", uselist=False, single_parent=True)
-    usuario = db.relationship('Usuarios', back_populates="servicios", uselist=False, single_parent=True)
+    tecnico = db.relationship("Usuarios", foreign_keys=[tecnico_usuario_id])
+    administrativo = db.relationship("Usuarios", foreign_keys=[administrativo_usuario_id])
     tipo_intervencion = db.relationship('Tipo_intervenciones', back_populates="servicios", uselist=False, single_parent=True)
 
     def __init__(self, id_servicio, numero_servicio, fecha_solicitud, tipo_cliente_id, cliente_general_id, nombre_solicitante, tipo_de_equipo, descripcion, tecnico_usuario_id, administrativo_usuario_id ,id_activo, tipo_intervencion_id):

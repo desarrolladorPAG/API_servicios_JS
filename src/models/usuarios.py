@@ -9,8 +9,6 @@ class Usuarios(db.Model):
     nombre_completo = db.Column(db.String(50))
     rol_id = db.Column(db.BINARY(16), db.ForeignKey('roles.id_rol'), nullable=False)
 
-    servicios = db.relationship("Servicios", back_populates="usuario",cascade="all")
-    sub_servicios = db.relationship("Sub_servicios", back_populates="usuario",cascade="all")
     archivos_adjuntos = db.relationship("Archivos_adjuntos", back_populates="usuario",cascade="all")
     cierres_tecnicos = db.relationship("Cierres_tecnicos", back_populates="usuario",cascade="all")
     numeros_contables = db.relationship("Numeros_contables", back_populates="usuario",cascade="all")
