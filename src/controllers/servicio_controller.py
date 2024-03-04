@@ -5,6 +5,11 @@ import uuid
 import binascii
 from sqlalchemy.exc import IntegrityError
 from decouple import config
+from models.tipo_clientes import Tipo_clientes
+from models.clientes_generales import Clientes_generales
+from models.usuarios import Usuarios
+from models.tipo_intervenciones import Tipo_intervenciones
+from sqlalchemy.orm import aliased
 
 def crear_servicio(id_usuario_administrativo):
     try:
@@ -69,4 +74,35 @@ def generar_numero_servicio():
 
     # return numero_servicio_formateado
     return numero_servicio_formateado
+
+def obtener_servicios():
+    try:
+        lista = []
+        UsuarioTecnico = aliased(Usuarios)
+        UsuarioAdministrativo = aliased(Usuarios)
+
+        servicios = db.session.query(
+            Servicios.id_servicio, 
+            Servicios.numero_servicio, 
+            Servicios.fecha_solicitud, 
+            Tipo_clientes.nombre_cliente, 
+            Clientes_generales.nombre_cliente_general, 
+            Servicios.nombre_solicitante, 
+            Servicios.tipo_de_equipo, 
+            Servicios.descripcion, 
+            UsuarioTecnico.nombre_completo.label("tecnico_nombre"), 
+            UsuarioAdministrativo.nombre_completo.label("administrativo_nombre"), 
+            Servicios.id_activo,
+            Tipo_intervenciones.nombre_tipo_intervencion).join(Tipo_clientes, Servicios.tipo_cliente_id == Tipo_clientes.id_tipo_cliente).join(Clientes_generales, Servicios.cliente_general_id == Clientes_generales.id_cliente_general, isouter=True).join(UsuarioTecnico, Servicios.tecnico_usuario_id == UsuarioTecnico.id_usuario).join(UsuarioAdministrativo, Servicios.administrativo_usuario_id == UsuarioAdministrativo.id_usuario).join(Tipo_intervenciones, Servicios.tipo_intervencion_id == Tipo_intervenciones.id_tipo_intervencion)
+        
+        for servicio in servicios:
+            datos = {"id_servicio" : binascii.hexlify(servicio.id_servicio).decode(), "numero_servicio" : servicio.numero_servicio, "fecha_solicitud" : servicio.fecha_solicitud.strftime('%d/%m/%y'), "tipo_cliente" : servicio.nombre_cliente, "cliente_general" : servicio.nombre_cliente_general, "solicitante" : servicio.nombre_solicitante, "tipo_de_equipo" : servicio.tipo_de_equipo, "descripcion" : servicio.descripcion, "tecnico_nombre" : servicio.tecnico_nombre, "administrativo_nombre" : servicio.administrativo_nombre, "id_activo" : servicio.id_activo, "tipo_intervencion" : servicio.nombre_tipo_intervencion}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+        
 
