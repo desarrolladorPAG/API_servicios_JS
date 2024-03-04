@@ -12,7 +12,8 @@ from routes.tipo_asignacion import tipo_asignacion
 from routes.tipo_cliente import tipo_cliente
 from routes.tipo_intervenciones import tipo_intervencion
 from routes.login import login
-
+from routes.servicio import servicios
+from routes.clientes_generales import cliente_general
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:barranquilla91#$%@localhost/servicios_js'
@@ -34,6 +35,8 @@ app.register_blueprint(tipo_asignacion)
 app.register_blueprint(tipo_cliente)
 app.register_blueprint(tipo_intervencion)
 app.register_blueprint(login)
+app.register_blueprint(servicios)
+app.register_blueprint(cliente_general)
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
