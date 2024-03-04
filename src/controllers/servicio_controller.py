@@ -144,6 +144,24 @@ def editar_servicio(id_servicio):
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
 
+def eliminar_servicio(id_servicio):
+    try:
+        
+        id_servicio_bytes = binascii.unhexlify(id_servicio)
+
+        servicio = db.session.query(Servicios).get(id_servicio_bytes)
+
+        if not servicio:
+            return jsonify({"message" : "Servicio no encontrado", "status" : 404}) , 404
+        
+        db.session.delete(servicio)
+        db.session.commit()
+        return jsonify({"message" : "Servicio eliminado", "status" : 200})
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado :", "error" : str(e)}) , 500
+
+
 
 
         

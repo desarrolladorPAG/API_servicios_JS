@@ -21,3 +21,8 @@ def obtener_servicios():
 @servicios.route('/servicio/<id_servicio>', methods=['PUT'])
 def editar_servicio(id_servicio):
     return servicio_controller.editar_servicio(id_servicio)
+
+@cross_origin()
+@servicios.route('/servicio/<id_servicio>', methods=['DELETE'])
+def eliminar_servicio(id_servicio):
+    return servicio_controller.eliminar_servicio(id_servicio)
