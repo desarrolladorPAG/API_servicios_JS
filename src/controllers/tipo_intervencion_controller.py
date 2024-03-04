@@ -19,3 +19,19 @@ def crear_tipo_intervencion():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_tipo_intervenciones():
+    try:
+        lista = []
+        tipo_intervenciones = db.session.query(Tipo_intervenciones).all()
+
+        for tipo in tipo_intervenciones:
+            datos = {"id_tipo_intervencion": binascii.hexlify(tipo.id_tipo_intervencion).decode(), "tipo_cliente_id" : binascii.hexlify(tipo.tipo_cliente_id).decode(), "nombre" : tipo.nombre_tipo_intervencion}
+
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
