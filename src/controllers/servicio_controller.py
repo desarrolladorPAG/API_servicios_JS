@@ -104,5 +104,47 @@ def obtener_servicios():
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
 
+def editar_servicio(id_servicio):
+    try:
+        id_servicio_bytes = binascii.unhexlify(id_servicio)
+        servicio = db.session.query(Servicios).get(id_servicio_bytes)
+
+        if not servicio:
+            return jsonify({"message" : "Servicio no encontrado", "status" : 404}) , 404
+
+        tipo_cliente_id = request.json["tipo_cliente_id"]
+        cliente_general_id = request.json["cliente_general_id"]
+
+        if tipo_cliente_id == config('ID_CLIENTE_GENERAL'):
+            if cliente_general_id == None: #Si no se selecciono un cliente general es porque creará uno
+                nombre_cliente_general = request.json["nombre_cliente_general"]
+                cliente_general_id_bytes = cliente_general_controller.crear_cliente_general(nombre_cliente_general)
+                servicio.cliente_general_id = cliente_general_id_bytes
+            else: #Si la variable cliente_general_id es diferente de nulo es porque escogio un cliente general ya creado
+                cliente_general_id_bytes = binascii.unhexlify(cliente_general_id)
+                servicio.cliente_general_id = cliente_general_id_bytes
+        
+        servicio.fecha_solicitud = request.json["fecha_solicitud"]
+        servicio.tipo_cliente_id = binascii.unhexlify(tipo_cliente_id)
+        servicio.nombre_solicitante = request.json["nombre_solicitante"]
+        servicio.tipo_de_equipo = request.json["tipo_de_equipo"]
+        servicio.descripcion = request.json["descripcion"]
+        servicio.tecnico_usuario_id = binascii.unhexlify(request.json["tecnico_usuario_id"])
+        servicio.administrativo_usuario_id = binascii.unhexlify(request.json["administrativo_usuario_id"])
+        servicio.id_activo = request.json["id_activo"]
+        servicio.tipo_intervencion_id = request.json["tipo_intervencion_id"]
+
+        db.session.commit()
+        return jsonify({"message" : "Servicio actualizado exitosamente", "status" : 200}) , 200
+    
+    except IntegrityError as e:
+        db.session.rollback()
+        return jsonify({"message": "Error de integridad de la base de datos", "error": str(e)}), 400
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+
+
         
 

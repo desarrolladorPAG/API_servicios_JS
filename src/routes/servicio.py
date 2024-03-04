@@ -16,3 +16,8 @@ def crear_servicio():
 @servicios.route('/servicios', methods=['GET'])
 def obtener_servicios():
     return servicio_controller.obtener_servicios()
+
+@cross_origin()
+@servicios.route('/servicio/<id_servicio>', methods=['PUT'])
+def editar_servicio(id_servicio):
+    return servicio_controller.editar_servicio(id_servicio)
