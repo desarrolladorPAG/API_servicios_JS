@@ -30,3 +30,18 @@ def crear_usuario():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_usuarios():
+    try:
+        lista = []
+        usuarios = db.session.query(Usuarios).all()
+
+        for usuario in usuarios:
+            datos = {"id_usuario" : binascii.hexlify(usuario.id_usuario).decode(), "correo" : usuario.correo, "nombre" : usuario.nombre_completo, "rol_id" : binascii.hexlify(usuario.rol_id).decode()}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+

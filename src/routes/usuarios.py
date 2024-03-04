@@ -8,3 +8,8 @@ usuarios = Blueprint('usuarios', __name__,url_prefix='/api/v1')
 @usuarios.route('/usuarios', methods=['POST'])
 def crear_usuario():
     return usuario_controller.crear_usuario()
+
+@cross_origin
+@usuarios.route('/usuarios', methods=['GET'])
+def obtener_usuarios():
+    return usuario_controller.obtener_usuarios()
