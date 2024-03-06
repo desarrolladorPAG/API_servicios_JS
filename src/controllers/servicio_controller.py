@@ -130,7 +130,6 @@ def editar_servicio(id_servicio):
         servicio.tipo_de_equipo = request.json["tipo_de_equipo"]
         servicio.descripcion = request.json["descripcion"]
         servicio.tecnico_usuario_id = binascii.unhexlify(request.json["tecnico_usuario_id"])
-        servicio.administrativo_usuario_id = binascii.unhexlify(request.json["administrativo_usuario_id"])
         servicio.id_activo = request.json["id_activo"]
         servicio.tipo_intervencion_id = request.json["tipo_intervencion_id"]
 
