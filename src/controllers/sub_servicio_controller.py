@@ -71,6 +71,47 @@ def generar_numero_subservicio(id_servicio_bytes):
     else:
         numero_sub_serivico_formateado = f"{numero_servicio}-01"
         return numero_sub_serivico_formateado
+
+def editar_sub_servicio(id_sub_servicio):
+    try:
+        id_sub_servicio_bytes = binascii.unhexlify(id_sub_servicio)
+        sub_servicio = db.session.query(Sub_servicios).get(id_sub_servicio_bytes)
+        tipo_cliente_id = binascii.unhexlify(request.json["tipo_cliente_id"])
+
+        if not sub_servicio:
+            return jsonify({"message" : "Sub-servicio no encontrado", "status" : 404}) , 404
+        
+        if request.json["nuevo_tipo_intervencion"] != None: #Si se manda un nuevo nombre de tipo de intervencio, se debe crear en la base de datos
+            tipo_intervencion_id = tipo_intervencion_controller.crear_tipo_intervencion(tipo_cliente_id, request.json["nuevo_tipo_intervencion"])
+        else:
+            tipo_intervencion_id = binascii.unhexlify(request.json["tipo_intervencion_id"])
+        
+        sub_servicio.tipo_cliente_id = tipo_cliente_id
+        sub_servicio.tipo_intervencion_id = tipo_intervencion_id
+        sub_servicio.tecnico_usuario_id = binascii.unhexlify(request.json["tecnico_usuario_id"])
+        sub_servicio.fecha_solicitud = request.json["fecha_solicitud"]
+        sub_servicio.nombre_solicitante = request.json["nombre_solicitante"]
+        sub_servicio.descripcion = request.json["descripcion"]
+
+        db.session.commit()
+        return jsonify({"message" : "Sub-servicio actualizado exitosamente", "status" : 200}) , 200
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_sub_servicios():
+    try:
+        lista = []
+        sub_servicios = db.session.query(Sub_servicios).all()
+
+        for sub_servicio in sub_servicios:
+            datos = {"id_sub_servicio" : binascii.hexlify(sub_servicio.id_sub_servicio).decode(), "numero_sub_servicio" : sub_servicio.numero_sub_servicio, "servicio_id" : binascii.hexlify(sub_servicio.servicio_id).decode(), "descripcion" : sub_servicio.descripcion, "fecha_solicitud" : sub_servicio.fecha_solicitud, "tipo_intervencion_id" : binascii.hexlify(sub_servicio.tipo_intervencion_id).decode()}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
          
     
 
