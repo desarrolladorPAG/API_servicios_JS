@@ -9,6 +9,7 @@ from models.tipo_clientes import Tipo_clientes
 from models.clientes_generales import Clientes_generales
 from models.usuarios import Usuarios
 from models.tipo_intervenciones import Tipo_intervenciones
+from controllers import tipo_intervencion_controller
 from sqlalchemy.orm import aliased
 
 def crear_servicio(id_usuario_administrativo):
@@ -16,7 +17,6 @@ def crear_servicio(id_usuario_administrativo):
         id_servicio = uuid.uuid4().bytes
         id_usuario_administrativo_bytes = binascii.unhexlify(id_usuario_administrativo)
         tecnico_usuario_id_bytes = binascii.unhexlify(request.json["tecnico_usuario_id"])
-        tipo_intervencion_id_bytes = binascii.unhexlify(request.json["tipo_intervencion_id"])
 
         numero_servicio = generar_numero_servicio()
         fecha_solicitud = request.json["fecha_solicitud"]
@@ -26,22 +26,25 @@ def crear_servicio(id_usuario_administrativo):
         tipo_de_equipo = request.json["tipo_de_equipo"]
         descripcion = request.json["descripcion"]
         id_activo = request.json["id_activo"]
-        
+
+        tipo_cliente_id_bytes = binascii.unhexlify(tipo_cliente_id)
         
 
         if tipo_cliente_id == config('ID_CLIENTE_GENERAL'):
             if cliente_general_id == None: #Si no se selecciono un cliente general es porque creará uno
                 nombre_cliente_general = request.json["nombre_cliente_general"]
                 cliente_general_id_bytes = cliente_general_controller.crear_cliente_general(nombre_cliente_general)
-            else: #Si la variable cliente_general_id es diferente de nulo es porque escogio un cliente general ya crado
+            else: #Si la variable cliente_general_id es diferente de nulo es porque escogio un cliente general ya creado
                 cliente_general_id_bytes = binascii.unhexlify(cliente_general_id)
         else: #Si no es tipo de cliente general no se guardara un cliente general
-            cliente_general_id_bytes = None        
-        
-        
-        tipo_cliente_id_bytes = binascii.unhexlify(tipo_cliente_id)
+            cliente_general_id_bytes = None
 
-        new_servicio = Servicios(id_servicio, numero_servicio, fecha_solicitud, tipo_cliente_id_bytes, cliente_general_id_bytes, nombre_solicitante, tipo_de_equipo, descripcion, tecnico_usuario_id_bytes, id_usuario_administrativo_bytes, id_activo, tipo_intervencion_id_bytes)
+        if request.json["nuevo_tipo_intervencion"] != None: #Si se manda un nuevo nombre de tipo de intervencio, se debe crear en la base de datos
+            tipo_intervencion_id = tipo_intervencion_controller.crear_tipo_intervencion(tipo_cliente_id_bytes, request.json["nuevo_tipo_intervencion"] )
+        else:
+            tipo_intervencion_id = binascii.unhexlify(request.json["tipo_intervencion_id"])        
+        
+        new_servicio = Servicios(id_servicio, numero_servicio, fecha_solicitud, tipo_cliente_id_bytes, cliente_general_id_bytes, nombre_solicitante, tipo_de_equipo, descripcion, tecnico_usuario_id_bytes, id_usuario_administrativo_bytes, id_activo, tipo_intervencion_id)
 
         db.session.add(new_servicio)
         db.session.commit()
