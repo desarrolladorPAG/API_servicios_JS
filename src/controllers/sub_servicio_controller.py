@@ -112,6 +112,24 @@ def obtener_sub_servicios():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def eliminar_sub_servicio(id_sub_servicio):
+    try:
+        id_sub_servicio_bytes = binascii.unhexlify(id_sub_servicio)
+
+        sub_servicio = db.session.query(Sub_servicios).get(id_sub_servicio_bytes)
+
+        if not sub_servicio:
+            return jsonify({"message" : "Sub-servicio no encontrado", "status" : 404}) , 404
+        
+        db.session.delete(sub_servicio)
+        db.session.commit()
+
+        return jsonify({"message" : "Sub-servicio eliminado", "status" : 200})
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
          
     
 
