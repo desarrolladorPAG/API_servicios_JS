@@ -21,3 +21,8 @@ def editar_cierre_tecnico(id_cierre_tecnico):
 @cierre_tecnico.route('/cierres_tecnicos', methods=['GET'])
 def obtener_cierres_tecnicos():
     return cierre_tecnico_controller.obtener_cierres_tecnicos()
+
+@cross_origin()
+@cierre_tecnico.route('/cierre_tecnico/<id_cierre_tecnico>', methods=['DELETE'])
+def eliminar_cierre_tecnico(id_cierre_tecnico):
+    return cierre_tecnico_controller.eliminar_cierre_tecnico(id_cierre_tecnico)

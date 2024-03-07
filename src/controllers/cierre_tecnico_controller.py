@@ -89,3 +89,21 @@ def obtener_cierres_tecnicos():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def eliminar_cierre_tecnico(id_cierre_tecnico):
+    try:
+        id_cierre_tecnico_bytes = binascii.unhexlify(id_cierre_tecnico)
+
+        cierre_tecnico = db.session.query(Cierres_tecnicos).get(id_cierre_tecnico_bytes)
+
+        if not cierre_tecnico:
+            return jsonify({"message" : "Cierre tecnico no encontrado", "status" : 404}) , 404
+        
+        db.session.delete(cierre_tecnico)
+        db.session.commit()
+
+        return jsonify({"message" : "Cierre tecnico eliminado", "status" : 200})
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
