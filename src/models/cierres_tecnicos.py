@@ -22,7 +22,7 @@ class Cierres_tecnicos(db.Model):
         self.servicio_id = servicio_id
         self.sub_servicio_id = sub_servicio_id
         self.fecha_cierre = fecha_cierre
-        self.estado_servicio = estado_servicio_id
+        self.estado_servicio_id = estado_servicio_id
         self.usuario_id = usuario_id
         self.descripcion = descripcion
 
