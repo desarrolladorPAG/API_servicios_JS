@@ -16,3 +16,17 @@ def crear_tipo_adjunto():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_tipos_de_adjuntos():
+    try:
+        lista = []
+        tipos_adjuntos = db.session.query(Tipo_adjuntos).all()
+
+        for tipo_adjunto in tipos_adjuntos:
+            datos = {"id_tipo_adjunto" : binascii.hexlify(tipo_adjunto.id_tipo_adjunto).decode(), "nombre_tipo" : tipo_adjunto.nombre_tipo}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
