@@ -16,3 +16,17 @@ def crear_tipo_asignacion():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_tipo_de_asignaciones():
+    try:
+        lista = []
+        tipo_de_asignaciones = db.session.query(Tipo_asignaciones).all()
+
+        for tipo_de_asignacion in tipo_de_asignaciones:
+            datos = {"id_tipo_asignacion" : binascii.hexlify(tipo_de_asignacion.id_tipo_asignacion).decode(), "nombre_asignacion" : tipo_de_asignacion.nombre_asignacion}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
