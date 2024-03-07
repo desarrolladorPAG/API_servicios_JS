@@ -40,4 +40,51 @@ def crear_numero_contable(id_usuario):
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+    
+def obtener_numeros_contables():
+    try:
+        lista = []
+        numeros_contables = db.session.query(Numeros_contables).all()
+
+        for numero_contable in numeros_contables:
+            if numero_contable.servicio_id == None:
+                servicio_id = None
+            else :
+                servicio_id = binascii.hexlify(numero_contable.servicio_id).decode()
+            
+            if numero_contable.sub_servicio_id == None:
+                sub_servicio_id = None
+            else:
+                sub_servicio_id = binascii.hexlify(numero_contable.sub_servicio_id).decode()
+
+            datos = {"id_numero_contable" : binascii.hexlify(numero_contable.id_numero_contable).decode(), "servicio_id" : servicio_id, "sub_servicio_id" : sub_servicio_id, "tipo_asignacion_id" : binascii.hexlify(numero_contable.tipo_asignacion_id).decode(), "usuario_id" : binascii.hexlify(numero_contable.usuario_id).decode(), "numero_documento" : numero_contable.numero_documento, "fecha_emision" : numero_contable.fecha_emision, "ruta_archivo" : numero_contable.ruta_archivo, "observacion" : numero_contable.observacion}
+
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def editar_numero_contable(id_numero_contable):
+    try:
+        id_numero_contable_bytes = binascii.unhexlify(id_numero_contable)
+
+        numero_contable = db.session.query(Numeros_contables).get(id_numero_contable_bytes)
+
+        if not numero_contable:
+            return jsonify({"message" : "Numero contable no encontrado", "status" : 404}) , 404
+        
+        numero_contable.tipo_asignacion_id = binascii.unhexlify(request.json["tipo_asignacion_id"])
+        numero_contable.numero_documento = request.json["numero_documento"]
+        numero_contable.fecha_emision = request.json["fecha_emision"]
+        numero_contable.observacion = request.json["observacion"]
+        numero_contable.ruta_archivo = request.json["ruta_archivo"]
+
+        db.session.commit()
+
+        return jsonify({"message" : "Numero contable actualizado exitosamente", "status" : 200}) , 200
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 50
 
