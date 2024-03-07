@@ -16,3 +16,8 @@ def adjuntar_archivo():
 @archivo_adjunto.route('/archivos_adjuntos', methods=['GET'])
 def obtener_archivos_adjuntos():
     return archivos_adjuntos_controller.obtener_archivos_adjuntos()
+
+@cross_origin()
+@archivo_adjunto.route('/archivo_adjunto/<id_archivo_adjunto>', methods=['DELETE'])
+def eliminar_archivo_adjunto(id_archivo_adjunto):
+    return archivos_adjuntos_controller.eliminar_archivo_adjunto(id_archivo_adjunto)

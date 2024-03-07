@@ -61,4 +61,21 @@ def obtener_archivos_adjuntos():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+    
+def eliminar_archivo_adjunto(id_archivo_adjunto):
+    try:
+        id_archivo_adjunto_bytes = binascii.unhexlify(id_archivo_adjunto)
+
+        archivo_adjunto = db.session.query(Archivos_adjuntos).get(id_archivo_adjunto_bytes)
+
+        if not archivo_adjunto:
+            return jsonify({"message" : "Archivo adjunto no encontrado", "status" : 404}) , 404
+
+        db.session.delete(archivo_adjunto)
+        db.session.commit()
+
+        return jsonify({"message" : "Archivo adjunto eliminado", "status" : 200})
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
 
