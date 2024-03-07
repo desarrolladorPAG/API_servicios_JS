@@ -11,3 +11,8 @@ archivo_adjunto = Blueprint('archivo_adjunto', __name__,url_prefix='/api/v1')
 def adjuntar_archivo():
     id_usuario = get_jwt_identity()
     return archivos_adjuntos_controller.adjuntar_archivo(id_usuario)
+
+@cross_origin()
+@archivo_adjunto.route('/archivos_adjuntos', methods=['GET'])
+def obtener_archivos_adjuntos():
+    return archivos_adjuntos_controller.obtener_archivos_adjuntos()

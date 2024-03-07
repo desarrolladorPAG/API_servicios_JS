@@ -37,3 +37,28 @@ def adjuntar_archivo(id_usuario):
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
 
+def obtener_archivos_adjuntos():
+    try:
+        lista = []
+        archivos_adjuntos = db.session.query(Archivos_adjuntos).all()
+
+        for archivo_adjunto in archivos_adjuntos:
+            if archivo_adjunto.servicio_id == None:
+                servicio_id = None
+            else :
+                servicio_id = binascii.hexlify(archivo_adjunto.servicio_id).decode()
+            
+            if archivo_adjunto.sub_servicio_id == None:
+                sub_servicio_id = None
+            else:
+                sub_servicio_id = binascii.hexlify(archivo_adjunto.sub_servicio_id).decode()
+
+            datos = {"id_archivo_adjunto" : binascii.hexlify(archivo_adjunto.id_archivo_adjunto).decode(), "servicio_id" : servicio_id, "sub_servicio_id" : sub_servicio_id, "tipo_adjunto_id" : binascii.hexlify(archivo_adjunto.tipo_adjunto_id).decode(), "usuario_id" : binascii.hexlify(archivo_adjunto.usuario_id).decode(), "ruta_archivo" : archivo_adjunto.ruta_archivo}
+
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
