@@ -10,7 +10,7 @@ class Numeros_contables(db.Model):
     usuario_id = db.Column(db.BINARY(16), db.ForeignKey('usuarios.id_usuario'), nullable=False)
     numero_documento = db.Column(db.String(50),nullable = False)
     fecha_emision = db.Column(db.Date,nullable = False)
-    ruta_archivo = db.Column(db.String(255),nullable = False)
+    ruta_archivo = db.Column(db.String(255),nullable = True)
     observacion = db.Column(db.String(255),nullable = True)
 
     #Relaciones de llaves foraneas

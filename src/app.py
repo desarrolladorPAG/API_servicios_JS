@@ -17,6 +17,8 @@ from routes.clientes_generales import cliente_general
 from routes.sub_servicios import sub_servicio
 from routes.cierres_tecnicos import cierre_tecnico
 from routes.archivos_adjuntos import archivo_adjunto
+from routes.numeros_contables import numero_contable
+
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:barranquilla91#$%@localhost/servicios_js'
@@ -43,6 +45,7 @@ app.register_blueprint(cliente_general)
 app.register_blueprint(sub_servicio)
 app.register_blueprint(cierre_tecnico)
 app.register_blueprint(archivo_adjunto)
+app.register_blueprint(numero_contable)
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
