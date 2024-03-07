@@ -8,3 +8,8 @@ estados_servicio = Blueprint('estados_servicio', __name__,url_prefix='/api/v1')
 @estados_servicio.route("estados_servicio", methods=['POST'])
 def crear_estado_de_servicio():
     return estado_de_servicio_controller.crear_estado_de_servicio()
+
+@cross_origin()
+@estados_servicio.route("estados_servicio", methods=['GET'])
+def obtener_estados_de_servicio():
+    return estado_de_servicio_controller.obtener_estados_de_servicio()

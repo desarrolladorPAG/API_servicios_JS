@@ -16,3 +16,17 @@ def crear_estado_de_servicio():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_estados_de_servicio():
+    try:
+        lista = []
+        estados_de_servicio = db.session.query(Estados_de_servicio).all()
+
+        for estado in estados_de_servicio:
+            datos = {"id_estado_servicio" : binascii.hexlify(estado.id_estado_servicio).decode() , "nombre" : estado.nombre_estado}
+            lista.append(datos)
+        
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
