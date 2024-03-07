@@ -40,10 +40,52 @@ def crear_cierre_tecnico(id_usuario):
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def editar_cierre_tecnico(id_cierre_tecnico):
+    try:
+        id_cierre_tecnico_bytes = binascii.unhexlify(id_cierre_tecnico)
+
+        cierre_tecnico = db.session.query(Cierres_tecnicos).get(id_cierre_tecnico_bytes)
+
+        cierre_tecnico.fecha_cierre = request.json["fecha_cierre"]
+        cierre_tecnico.estado_servicio_id = binascii.unhexlify(request.json["estado_servicio_id"]) 
+        cierre_tecnico.descripcion = request.json["descripcion"]
+
+        db.session.commit()
+
+        return jsonify({"message" : "Servicio actualizado exitosamente", "status" : 200}) , 200
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def obtener_cierres_tecnicos():
+    try:
+        lista = []
+        cierres_tecnicos = db.session.query(Cierres_tecnicos).all()
+
+        for cierre in cierres_tecnicos:
+            if cierre.servicio_id == None:
+                servicio_id = None
+            else :
+                servicio_id = binascii.hexlify(cierre.servicio_id).decode()
+            
+            if cierre.sub_servicio_id == None:
+                sub_servicio_id = None
+            else:
+                sub_servicio_id = binascii.hexlify(cierre.sub_servicio_id).decode()
+
+            datos = {
+                "id_cierre_tecnico" : binascii.hexlify(cierre.id_cierre_tecnico).decode() , 
+                "servicio_id" :  servicio_id, 
+                "sub_servicio_id" : sub_servicio_id, 
+                "fecha_cierre" : cierre.fecha_cierre.strftime('%d/%m/%y'), 
+                "estado_servicio_id" : binascii.hexlify(cierre.estado_servicio_id).decode(), 
+                "usuario_id" : binascii.hexlify(cierre.usuario_id).decode(), 
+                "descripcion" : cierre.descripcion}
+
+            lista.append(datos)
         
-
-
-
-
-
-
+        return jsonify(lista)
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
