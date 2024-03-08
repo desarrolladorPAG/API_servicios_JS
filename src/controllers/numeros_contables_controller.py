@@ -86,5 +86,24 @@ def editar_numero_contable(id_numero_contable):
         return jsonify({"message" : "Numero contable actualizado exitosamente", "status" : 200}) , 200
     
     except Exception as e:
-        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 50
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+def eliminar_numero_contable(id_numero_contable):
+    try:
+        id_numero_contable_bytes = binascii.unhexlify(id_numero_contable)
+
+        numero_contable = db.session.query(Numeros_contables).get(id_numero_contable_bytes)
+
+        if not numero_contable:
+            return jsonify({"message" : "Numero contable no encontrado", "status" : 404}) , 404
+        
+        db.session.delete(numero_contable)
+        db.session.commit()
+
+        return jsonify({"message" : "Numero contable eliminado exitosamente", "status" : 200}) , 200
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}) , 500
+
+
 
