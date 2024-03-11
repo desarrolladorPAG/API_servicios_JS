@@ -50,10 +50,10 @@ app.register_blueprint(numero_contable)
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
-        res = Response()
+        res = Response('', 200, mimetype='application/json')
         res.headers['Access-Control-Allow-Origin'] = 'http://localhost:4200'
-        res.headers['X-Content-Type-Options'] = 'application/json'
         res.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+        res.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
         return res
 
 if __name__=="__main__":
