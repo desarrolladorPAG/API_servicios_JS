@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, request, Response
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -46,6 +46,15 @@ app.register_blueprint(sub_servicio)
 app.register_blueprint(cierre_tecnico)
 app.register_blueprint(archivo_adjunto)
 app.register_blueprint(numero_contable)
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        res = Response()
+        res.headers['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+        res.headers['X-Content-Type-Options'] = 'application/json'
+        res.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+        return res
 
 if __name__=="__main__":
     app.run(port=5000, debug=True)
