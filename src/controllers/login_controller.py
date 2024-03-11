@@ -26,7 +26,7 @@ def login():
         else:
             return jsonify({"message" : "Correo o contraseña incorrecta" , "status" : 400}) , 400
     except Exception as e:
-        return jsonify({"message" : "Ha ocurrido un error inesperado :", "error" : str(e) })
+        return jsonify({"message" : "Ha ocurrido un error inesperado :", "error" : str(e) }) , 500
 
 def login_google():
     try:
