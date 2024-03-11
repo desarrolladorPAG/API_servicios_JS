@@ -48,7 +48,7 @@ def validar_token_acceso_google(token_google):
         info_usuario = id_token.verify_oauth2_token(
             token_google,
             requests.Request(),
-            audience= config('ID_CLIENT'), #NO HAY ID_CLIENT EN EL ARCHIVO .ENV
+            audience= config('ID_CLIENT'),
             clock_skew_in_seconds= 10
         )
 
@@ -76,9 +76,11 @@ def crear_usuario_de_google(info_usuario):
         else: #Si no existe el usuario se registra en la bd y se e da el token
             id_usuario = uuid.uuid4().bytes #Generar una nueva UUID y convertirla a formato binario
             nombre_completo = info_usuario["name"]
-            rol_id = "" # Por defecto al crearse el usuario tendrá rol de tecnico
+            rol_id = "5f8f6ab7f81a4251b48372e4f9d21526" # Por defecto al crearse el usuario tendrá rol de tecnico
 
-            new_user = Usuarios(id_usuario,correo,None,nombre_completo, rol_id)
+            rol_id_bytes = binascii.unhexlify(rol_id)
+
+            new_user = Usuarios(id_usuario,correo,None,nombre_completo, rol_id_bytes)
             db.session.add(new_user)
             db.session.commit()
 
@@ -89,4 +91,4 @@ def crear_usuario_de_google(info_usuario):
             return jsonify({"token" : access_token, "message" : "Usuario creado correctamente"}), 200
         
     except Exception as e:
-        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e) })
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e) }) , 500
