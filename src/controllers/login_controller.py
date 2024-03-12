@@ -7,6 +7,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from decouple import config
 
+
 def login():
     try:
         correo = request.json['correo']
@@ -80,7 +81,7 @@ def crear_usuario_de_google(info_usuario):
 
             rol_id_bytes = binascii.unhexlify(rol_id)
 
-            new_user = Usuarios(id_usuario,correo,None,nombre_completo, rol_id_bytes)
+            new_user = Usuarios(id_usuario,correo,None,nombre_completo, rol_id_bytes, 1)
             db.session.add(new_user)
             db.session.commit()
 

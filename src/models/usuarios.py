@@ -9,6 +9,7 @@ class Usuarios(db.Model):
     password = db.Column(db.String(255))
     nombre_completo = db.Column(db.String(50))
     rol_id = db.Column(db.BINARY(16), db.ForeignKey('roles.id_rol'), nullable=False)
+    estado = db.Column(db.Integer,nullable = False, default = 1) # 0 = eliminado, 1= verificado, 2 = sin verificar
 
     archivos_adjuntos = db.relationship("Archivos_adjuntos", back_populates="usuario",cascade="all")
     cierres_tecnicos = db.relationship("Cierres_tecnicos", back_populates="usuario",cascade="all")
@@ -17,12 +18,13 @@ class Usuarios(db.Model):
     #Relaciones de clave foraneas
     rol = db.relationship('Roles', back_populates="usuarios", uselist=False, single_parent=True)
 
-    def __init__(self, id_usuario, correo, password, nombre_completo, rol_id):
+    def __init__(self, id_usuario, correo, password, nombre_completo, rol_id, estado):
         self.id_usuario = id_usuario
         self.correo = correo
         self.password = password
         self.nombre_completo = nombre_completo
         self.rol_id = rol_id
+        self.estado = estado
     
     def verificar_password(self,password):
         return check_password_hash(self.password,password)
