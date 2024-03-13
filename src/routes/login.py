@@ -13,3 +13,13 @@ def login_normal():
 @login.route('/login_google', methods=['POST'])
 def login_google():
     return login_controller.login_google()
+
+@cross_origin()
+@login.route('/registro', methods=['POST'])
+def registro():
+    return login_controller.registro()
+
+@cross_origin()
+@login.route('/verificar/<token>', methods=['POST'])
+def verificar_correo(token):
+    return login_controller.verificar_correo(token)

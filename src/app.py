@@ -18,7 +18,7 @@ from routes.sub_servicios import sub_servicio
 from routes.cierres_tecnicos import cierre_tecnico
 from routes.archivos_adjuntos import archivo_adjunto
 from routes.numeros_contables import numero_contable
-
+from utils.mail import mail
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:barranquilla91#$%@localhost/servicios_js'
@@ -28,6 +28,14 @@ app.config['JWT_TOKEN_LOCATION'] = ['headers']
 app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
 app.config["JWT_SECRET_KEY"] = config('JWT_SECRET_KEY')
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = config('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = config('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail.init_app(app)
 
 jwt = JWTManager(app)
 db.init_app(app)
