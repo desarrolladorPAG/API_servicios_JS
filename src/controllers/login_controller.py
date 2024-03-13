@@ -128,7 +128,7 @@ def registro():
         db.session.add(new_user)
         db.session.commit()
         
-        return jsonify({'mensaje': 'Se ha enviado un correo electrónico de verificación'}) ,200
+        return jsonify({'message': f'Se ha enviado un link de verificación al correo: {correo}'}) ,200
     
     except IntegrityError as e:
         db.session.rollback()
