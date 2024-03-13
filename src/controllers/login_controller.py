@@ -190,6 +190,26 @@ def verificar_correo(token):
         db.session.rollback()
         return jsonify({"message" : "Error al verificar el correo", "error" : str(e) }) , 500
 
+def reenviar_link_verificacion():
+    try:
+        correo = request.json["correo"]
+        usuario = db.session.query(Usuarios).filter_by(correo=correo).first()
+
+        if not usuario:
+            return jsonify({"message" : "Usuario no encontrado, por favor registrese", "status" : 404 }) , 404
+        
+        if usuario.estado == 1:
+            return jsonify({"message" : "El correo ya ha sido verificado", "status" : 400 }) , 400
+
+        id_usuario_hex = binascii.hexlify(usuario.id_usuario).decode()
+        token = generar_token(id_usuario_hex)
+        enviar_correo_verificacion(correo, token)
+
+        return jsonify({'message': f'Se ha enviado un nuevo link de verificación al correo: {correo}'}) ,200
+    
+    except Exception as e:
+        return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}), 500
+
 
 
 

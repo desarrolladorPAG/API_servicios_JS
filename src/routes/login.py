@@ -23,3 +23,8 @@ def registro():
 @login.route('/verificar/<token>', methods=['POST'])
 def verificar_correo(token):
     return login_controller.verificar_correo(token)
+
+@cross_origin()
+@login.route('/reenviar_link_verificacion', methods=['POST'])
+def reenviar_link_verificacion():
+    return login_controller.reenviar_link_verificacion()
