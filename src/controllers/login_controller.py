@@ -13,7 +13,7 @@ from flask_mail import Message
 from utils.mail import mail
 from werkzeug.security import generate_password_hash
 
-
+######################################### LOGIN NORMAL Y DE GOOGLE ##########################################
 def login():
     try:
         correo = request.json['correo']
@@ -100,6 +100,7 @@ def crear_usuario_de_google(info_usuario):
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e) }) , 500
 
+##################################### REGISTRAR USURIO Y VERIFICACION DE CORREO ################################3
 def registro():
     try:
         correo = request.json["correo"]
