@@ -22,6 +22,8 @@ def login():
         usuario = db.session.query(Usuarios).filter_by(correo=correo).first()
         
         if usuario:
+            if usuario.estado == 2 : # restriccion de que el usuario haya verificado su correo
+                return jsonify({"message" : "Su cuenta no ha sido verificada, por favor ingrese a su correo y verifique su cuenta dandole clic al enlace que le enviamos" , "status" : 400}) , 400
             if usuario.verificar_password(password):
                 id_usuario_hex = binascii.hexlify(usuario.id_usuario).decode() #El id del usuario lo convierto a hexadecimal
                 rol_id = binascii.hexlify(usuario.rol_id).decode()
