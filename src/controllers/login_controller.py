@@ -152,7 +152,7 @@ def enviar_correo_verificacion(correo, token):
     try:
         mensaje = Message(subject='Verificación de correo electrónico',
                       recipients=[correo],
-                      body=f'Por favor, haga clic en este enlace para verificar su correo electrónico: http://127.0.0.1:5000/api/v1/verificar/{token}', sender="sistema.pagcolombian@gmail.com")
+                      body=f'Por favor, haga clic en este enlace para verificar su correo electrónico: http://localhost:4200/verificar_correo/{token}', sender="sistema.pagcolombian@gmail.com")
         mail.send(mensaje)
     
     except Exception as e:
@@ -170,7 +170,7 @@ def verificar_correo(token):
         if not usuario:
             return jsonify({"message" : "Usuario no encontrado", "status" : 404 }) , 404
         elif usuario.estado == 1:
-            return jsonify({"message" : "Su correo ya ha sido verificado, inicie sesión", "status" : 400 }) , 400
+            return jsonify({"message" : "Su correo ya ha sido verificado, por favor inicie sesión", "status" : 400 }) , 400
             
         
         usuario.estado = 1 #Cambio el estado de sin verificar a activo
@@ -180,15 +180,15 @@ def verificar_correo(token):
     
     except SignatureExpired:
         db.session.rollback()
-        return jsonify({'message': 'El token de verificación ha expirado'}) , 400
+        return jsonify({'message': 'El link de verificación ha expirado, por favor reenvie uno nuevo'}) , 400
     
     except BadSignature:
         db.session.rollback()
-        return jsonify({'message': 'El token de verificación es inválido'}) , 400
+        return jsonify({'message': 'El link de verificación es inválido, reenvie uno nuevo o comuniquese con el administrador'}) , 400
     
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message" : "Error al verificar el correo", "error" : str(e) }) , 500
+        return jsonify({"message" : "Error al verificar el correo, por favor reenvie un nuevo link o comuniquese con el administrador", "error" : str(e) }) , 500
 
 def reenviar_link_verificacion():
     try:
@@ -199,7 +199,7 @@ def reenviar_link_verificacion():
             return jsonify({"message" : "Usuario no encontrado, por favor registrese", "status" : 404 }) , 404
         
         if usuario.estado == 1:
-            return jsonify({"message" : "El correo ya ha sido verificado", "status" : 400 }) , 400
+            return jsonify({"message" : "El correo ya ha sido verificado, por favor inicie sesión", "status" : 400 }) , 400
 
         id_usuario_hex = binascii.hexlify(usuario.id_usuario).decode()
         token = generar_token(id_usuario_hex)
