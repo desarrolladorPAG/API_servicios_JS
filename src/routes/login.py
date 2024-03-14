@@ -28,3 +28,13 @@ def verificar_correo(token):
 @login.route('/reenviar_link_verificacion', methods=['POST'])
 def reenviar_link_verificacion():
     return login_controller.reenviar_link_verificacion()
+
+@cross_origin()
+@login.route('/recuperar_password', methods=['POST'])
+def recuperar_password():
+    return login_controller.recuperar_password()
+
+@cross_origin()
+@login.route('/nueva_contraseña/<token>', methods=['POST'])
+def nueva_contraseña(token):
+    return login_controller.nueva_contraseña(token)

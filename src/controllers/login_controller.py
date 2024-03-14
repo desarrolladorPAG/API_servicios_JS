@@ -115,7 +115,7 @@ def registro():
         id_usuario = uuid.uuid4().bytes
 
         id_usuario_hex = binascii.hexlify(id_usuario).decode()
-        token = generar_token(id_usuario_hex)
+        token = generar_token(id_usuario_hex, "confirmar_cuenta")
         enviar_correo_verificacion(correo, token)
 
         nombre_completo = request.json["nombre_completo"]
@@ -140,10 +140,10 @@ def registro():
         else:
             return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}), 500
 
-def generar_token(id_usuario):
+def generar_token(id_usuario, salt):
     try:
         serializer = URLSafeTimedSerializer(config('JWT_SECRET_KEY'))
-        return serializer.dumps(id_usuario)
+        return serializer.dumps(id_usuario, salt=salt)
     except Exception as e:
         raise Exception("Error al generar el token", str(e))
         
@@ -161,7 +161,7 @@ def enviar_correo_verificacion(correo, token):
 def verificar_correo(token):
     try:
         serializer = URLSafeTimedSerializer(config('JWT_SECRET_KEY'))
-        id_usuario = serializer.loads(token, max_age=3600)
+        id_usuario = serializer.loads(token, max_age=3600, salt="confirmar_cuenta")
 
         id_usuario_bytes = binascii.unhexlify(id_usuario)
 
@@ -209,6 +209,69 @@ def reenviar_link_verificacion():
     
     except Exception as e:
         return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}), 500
+
+###################################### RECUPERAR CONTRASEÑA #################################################
+
+def recuperar_password():
+    try:
+        correo = request.json["correo"]
+        usuario = db.session.query(Usuarios).filter_by(correo=correo).first()
+
+        if usuario:
+            id_usuario_hex = binascii.hexlify(usuario.id_usuario).decode()
+            token = generar_token(id_usuario_hex, "reset_pass")
+            enviar_correo_recuperacion_contraseña(correo, token)
+            return jsonify({'message': f'Se ha enviado un link de recuperacion de contraseña al correo: {correo}'}) ,200
+        else:
+            return jsonify({'mensaje': 'El correo electrónico proporcionado no está registrado', "status" : 404}), 404
+    
+    except Exception as e:
+        if len(e.args) == 2:#Si el error tiene dos argumentos como los tiene la funcion de generar_token y enviar_correo_verificacion, mando el mensaje personalizado
+            return jsonify({"message" : e.args[0], "error" : e.args[1]}) , 500 
+        else:
+            return jsonify({"message" : "Ha ocurrido un error inesperado", "error" : str(e)}), 500
+
+
+def nueva_contraseña(token):
+    try:
+        serializer = URLSafeTimedSerializer(config('JWT_SECRET_KEY'))
+        id_usuario = serializer.loads(token, max_age=3600, salt="reset_pass")
+        id_usuario_bytes = binascii.unhexlify(id_usuario)
+        usuario = db.session.query(Usuarios).filter_by(id_usuario = id_usuario_bytes).first()
+
+        password = request.json["password"]
+        confirm_password = request.json["confirm_password"]
+
+        if not usuario:
+            return jsonify({'mensaje': 'El link es invalido o a expirado'}), 400
+        
+        if password == confirm_password:
+            password_encriptada = generate_password_hash(password,'pbkdf2:sha256',16)
+            usuario.password = password_encriptada
+            db.session.commit()
+            return jsonify({'mensaje': 'Contraseña actualizada correctamente', "status" : 200}), 200
+        else:
+            return jsonify({'mensaje': 'Las contraseñas no coinciden'}), 400
+        
+    except SignatureExpired:
+        return jsonify({'message': 'El link de verificación ha expirado, por favor reenvie uno nuevo'}) , 400
+    
+    except BadSignature:
+        return jsonify({'message': 'El link de recuperacion de contraseña es inválido, reenvie uno nuevo o comuniquese con el administrador', "status" : 400}) , 400
+    
+    except Exception as e:
+        return jsonify({"message" : "Error al crear nueva contraseña, intente de nuevo", "error" : str(e) }) , 500
+
+
+def enviar_correo_recuperacion_contraseña(correo, token):
+    try:
+        mensaje = Message(subject='Recuperación de contraseña',
+                      recipients=[correo],
+                      body=f'Por favor, haga clic en este enlace para recuperar su contraseña: http://localhost:4200/recuperar_contraseña/{token}', sender="sistema.pagcolombian@gmail.com")
+        mail.send(mensaje)
+    
+    except Exception as e:
+        raise Exception("Error al enviar el correo", str(e)) #Mando dos argumentos en el error para poder obtenerlos en la funcion que llame a esta funcion
 
 
 
