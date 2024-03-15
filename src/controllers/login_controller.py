@@ -243,15 +243,15 @@ def nueva_contraseña(token):
         confirm_password = request.json["confirm_password"]
 
         if not usuario:
-            return jsonify({'mensaje': 'El link es invalido o a expirado'}), 400
+            return jsonify({'message': 'El link es invalido o a expirado'}), 400
         
         if password == confirm_password:
             password_encriptada = generate_password_hash(password,'pbkdf2:sha256',16)
             usuario.password = password_encriptada
             db.session.commit()
-            return jsonify({'mensaje': 'Contraseña actualizada correctamente', "status" : 200}), 200
+            return jsonify({'message': 'Contraseña actualizada correctamente', "status" : 200}), 200
         else:
-            return jsonify({'mensaje': 'Las contraseñas no coinciden'}), 400
+            return jsonify({'message': 'Las contraseñas no coinciden', "status" : 400}), 400
         
     except SignatureExpired:
         return jsonify({'message': 'El link de verificación ha expirado, por favor reenvie uno nuevo'}) , 400
@@ -260,14 +260,14 @@ def nueva_contraseña(token):
         return jsonify({'message': 'El link de recuperacion de contraseña es inválido, reenvie uno nuevo o comuniquese con el administrador', "status" : 400}) , 400
     
     except Exception as e:
-        return jsonify({"message" : "Error al crear nueva contraseña, intente de nuevo", "error" : str(e) }) , 500
+        return jsonify({"message" : "Error al crear nueva contraseña, intente de nuevo o comuniquese con el adminsitrador", "error" : str(e) }) , 500
 
 
 def enviar_correo_recuperacion_contraseña(correo, token):
     try:
         mensaje = Message(subject='Recuperación de contraseña',
                       recipients=[correo],
-                      body=f'Por favor, haga clic en este enlace para recuperar su contraseña: http://localhost:4200/recuperar_contraseña/{token}', sender="sistema.pagcolombian@gmail.com")
+                      body=f'Por favor, haga clic en este enlace para recuperar su contraseña: http://localhost:4200/new_password/{token}', sender="sistema.pagcolombian@gmail.com")
         mail.send(mensaje)
     
     except Exception as e:

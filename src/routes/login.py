@@ -35,6 +35,6 @@ def recuperar_password():
     return login_controller.recuperar_password()
 
 @cross_origin()
-@login.route('/nueva_contraseña/<token>', methods=['POST'])
+@login.route('/new_password/<token>', methods=['POST'])
 def nueva_contraseña(token):
     return login_controller.nueva_contraseña(token)
