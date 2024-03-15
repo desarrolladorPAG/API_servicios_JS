@@ -223,7 +223,7 @@ def recuperar_password():
             enviar_correo_recuperacion_contraseña(correo, token)
             return jsonify({'message': f'Se ha enviado un link de recuperacion de contraseña al correo: {correo}'}) ,200
         else:
-            return jsonify({'mensaje': 'El correo electrónico proporcionado no está registrado', "status" : 404}), 404
+            return jsonify({'message': 'El correo electrónico proporcionado no está registrado', "status" : 404}), 404
     
     except Exception as e:
         if len(e.args) == 2:#Si el error tiene dos argumentos como los tiene la funcion de generar_token y enviar_correo_verificacion, mando el mensaje personalizado
