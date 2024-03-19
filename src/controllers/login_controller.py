@@ -217,6 +217,9 @@ def recuperar_password():
         correo = request.json["correo"]
         usuario = db.session.query(Usuarios).filter_by(correo=correo).first()
 
+        if usuario.estado == 2:
+            return jsonify({"message" : "Su cuenta no ha sido verificada" , "status" : 400}) , 400
+
         if usuario:
             id_usuario_hex = binascii.hexlify(usuario.id_usuario).decode()
             token = generar_token(id_usuario_hex, "reset_pass")
